@@ -30,11 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -61,7 +62,7 @@ public class ForecastFragment extends Fragment {
         dados.add("Quinta - Ensolarado - 27/21");
         dados.add("Sexta - Ensolarado - 27/21");
 
-        ArrayAdapter<String> mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_text, dados);
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_text, dados);
 
         ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast);
 
@@ -285,6 +286,17 @@ public class ForecastFragment extends Fragment {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
             }
             return resultStrs;
+
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            if (strings != null){
+                mForecastAdapter.clear();
+                for(String dayForecastStr : strings){
+                    mForecastAdapter.add(dayForecastStr);
+                }
+            }
 
         }
     }
