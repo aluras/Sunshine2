@@ -19,12 +19,6 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Intent intent = getIntent();
-        String forecastData = intent.getStringExtra(Intent.EXTRA_TEXT);
-        TextView text = new TextView(this);
-        text.setTextSize(40);
-        text.setText(forecastData);
-        Toast.makeText(this,forecastData, Toast.LENGTH_SHORT).show();
 
 
 
@@ -70,6 +64,11 @@ public class DetailActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            Intent intent = getActivity().getIntent();
+            String forecastData = intent.getStringExtra(Intent.EXTRA_TEXT);
+            TextView text = (TextView) rootView.findViewById(R.id.detail_text_id);
+            text.setText(forecastData);
+
             return rootView;
         }
     }
