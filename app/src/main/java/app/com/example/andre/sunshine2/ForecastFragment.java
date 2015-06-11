@@ -1,9 +1,11 @@
 package app.com.example.andre.sunshine2;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -54,15 +56,7 @@ public class ForecastFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
         ArrayList<String> dados = new ArrayList<String>();
-        dados.add("Hoje - Ensolarado - 27/21");
-        dados.add("Amanhã - Ensolarado - 27/21");
-        dados.add("Segunda - Ensolarado - 27/21");
-        dados.add("Terça - Ensolarado - 27/21");
-        dados.add("Quarta - Ensolarado - 27/21");
-        dados.add("Quinta - Ensolarado - 27/21");
-        dados.add("Sexta - Ensolarado - 27/21");
 
         mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_text, dados);
 
@@ -96,13 +90,23 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id== R.id.action_refresh){
-           new FetchWeatherTask().execute("santos,br");
+            updateWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateWeather(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        new FetchWeatherTask().execute(location);
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
 
     public class FetchWeatherTask extends AsyncTask<String,Void,String[]>{
 
@@ -219,6 +223,16 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String units = sharedPref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_default));
+
+            Log.i(LOG_TAG,"unidades: "+units);
+
+            if(units!="metric"){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) + 32;
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
