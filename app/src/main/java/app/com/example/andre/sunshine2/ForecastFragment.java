@@ -226,9 +226,7 @@ public class ForecastFragment extends Fragment {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String units = sharedPref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_default));
 
-            Log.i(LOG_TAG,"unidades: "+units);
-
-            if(units!="metric"){
+            if(!units.equals(getString(R.string.pref_units_default))){
                 high = (high * 1.8) + 32;
                 low = (low * 1.8) + 32;
             }
@@ -310,9 +308,11 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
+/*
             for (String s : resultStrs) {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
             }
+*/
             return resultStrs;
 
         }
