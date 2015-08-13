@@ -265,18 +265,12 @@ public class WeatherProvider extends ContentProvider {
         switch (match) {
             case WEATHER: {
                 int _id = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
-                if ( _id > 0 )
-                    numRowsAffected = _id;
-                else
-                    throw new android.database.SQLException("Failed to delete");
+                numRowsAffected = _id;
                 break;
             }
             case LOCATION: {
                 int _id = db.delete(WeatherContract.LocationEntry.TABLE_NAME, selection, selectionArgs);
-                if ( _id > 0 )
-                    numRowsAffected = _id;
-                else
-                    throw new android.database.SQLException("Failed to delete");
+                numRowsAffected = _id;
                 break;
             }
             default:
@@ -287,7 +281,7 @@ public class WeatherProvider extends ContentProvider {
         // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection
         // is null.
         // Oh, and you should notify the listeners here.
-        if(numRowsAffected> 0 && selection == null){
+        if(numRowsAffected > 0 || selection == null){
             getContext().getContentResolver().notifyChange(uri, null);
         }
         // Student: return the actual rows deleted
