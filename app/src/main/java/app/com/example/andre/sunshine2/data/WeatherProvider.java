@@ -342,10 +342,10 @@ public class WeatherProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
+        int returnCount = 0;
         switch (match) {
-            case WEATHER:
+            case WEATHER: {
                 db.beginTransaction();
-                int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
                         normalizeDate(value);
@@ -359,10 +359,15 @@ public class WeatherProvider extends ContentProvider {
                     db.endTransaction();
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
-                return returnCount;
-            default:
-                return super.bulkInsert(uri, values);
+                break;
+            }
+            default: {
+                returnCount = super.bulkInsert(uri, values);
+                break;
+                //throw new UnsupportedOperationException("Porrs ");
+            }
         }
+        return returnCount;
     }
 
     // You do not need to call this method. This is a method specifically to assist the testing
