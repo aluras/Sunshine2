@@ -1,10 +1,15 @@
 package app.com.example.andre.sunshine2;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,8 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
+
+import app.com.example.andre.sunshine2.data.WeatherContract;
 
 
 public class DetailActivity extends ActionBarActivity {
@@ -59,14 +65,51 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
         private static final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
 
         private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
         private String mForecastStr;
-
         private ShareActionProvider mShareActionProvider;
+        private static final int FORECAST_LOADER = 0;
+        private TextView text;
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            getLoaderManager().initLoader(FORECAST_LOADER,null,this);
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        private static final String[] FORECAST_COLUMNS = {
+                // In this case the id needs to be fully qualified with a table name, since
+                // the content provider joins the location & weather tables in the background
+                // (both have an _id column)
+                // On the one hand, that's annoying.  On the other, you can search the weather table
+                // using the location set by the user, which is only in the Location table.
+                // So the convenience is worth it.
+                WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+                WeatherContract.WeatherEntry.COLUMN_DATE,
+                WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+                WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+                WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+                WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+                WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+                WeatherContract.LocationEntry.COLUMN_COORD_LONG
+        };
+
+        // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+        // must change.
+        static final int COL_WEATHER_ID = 0;
+        static final int COL_WEATHER_DATE = 1;
+        static final int COL_WEATHER_DESC = 2;
+        static final int COL_WEATHER_MAX_TEMP = 3;
+        static final int COL_WEATHER_MIN_TEMP = 4;
+        static final int COL_LOCATION_SETTING = 5;
+        static final int COL_WEATHER_CONDITION_ID = 6;
+        static final int COL_COORD_LAT = 7;
+        static final int COL_COORD_LONG = 8;
 
         public PlaceholderFragment() {
             setHasOptionsMenu(true);
@@ -76,10 +119,9 @@ public class DetailActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            Intent intent = getActivity().getIntent();
-            mForecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-            TextView text = (TextView) rootView.findViewById(R.id.detail_text_id);
-            text.setText(mForecastStr);
+
+            text = (TextView) rootView.findViewById(R.id.detail_text_id);
+            //text.setText(mForecastStr);
 
             return rootView;
         }
@@ -99,7 +141,7 @@ public class DetailActivity extends ActionBarActivity {
 
             MenuItem menuItem = menu.findItem(R.id.action_share);
 
-            ShareActionProvider mShareActionProvider =
+            mShareActionProvider =
                     (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
             if(mShareActionProvider != null){
@@ -107,6 +149,46 @@ public class DetailActivity extends ActionBarActivity {
             }else {
                 Log.d(LOG_TAG, "ShareActionProvider is null");
             }
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Intent intent = getActivity().getIntent();
+            if (intent == null) {
+                return null;
+            }
+
+            return new CursorLoader(getActivity(),intent.getData(),FORECAST_COLUMNS,null,null,null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if(!data.moveToFirst()){return;}
+
+            int idx_max_temp = COL_WEATHER_MAX_TEMP;
+            int idx_min_temp = COL_WEATHER_MIN_TEMP;
+            int idx_date = COL_WEATHER_DATE;
+            int idx_short_desc = COL_WEATHER_DESC;
+
+            boolean isMetric = app.com.example.andre.sunshine2.Utility.isMetric(getActivity());
+            String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(data.getDouble(idx_max_temp), isMetric) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(data.getDouble(idx_min_temp), isMetric);
+
+
+            mForecastStr = app.com.example.andre.sunshine2.Utility.formatDate(data.getLong(idx_date)) +
+                    " - " + data.getString(idx_short_desc) +
+                    " - " + highLowStr;
+
+
+            text.setText(mForecastStr);
+            if(mShareActionProvider != null){
+                mShareActionProvider.setShareIntent(createShareForecastIntent());
+            }
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }
