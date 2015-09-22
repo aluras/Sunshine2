@@ -171,7 +171,7 @@ public class DetailActivity extends ActionBarActivity {
             int idx_short_desc = COL_WEATHER_DESC;
 
             boolean isMetric = app.com.example.andre.sunshine2.Utility.isMetric(getActivity());
-            String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(data.getDouble(idx_max_temp), isMetric) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(data.getDouble(idx_min_temp), isMetric);
+            String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_max_temp), isMetric) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp), isMetric);
 
 
             mForecastStr = app.com.example.andre.sunshine2.Utility.formatDate(data.getLong(idx_date)) +
