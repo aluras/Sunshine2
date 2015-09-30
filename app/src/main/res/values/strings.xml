@@ -38,4 +38,8 @@
     <!-- Temperature formats in degrees [CHAR LIMIT=NONE] -->
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
 
+    <string name="format_humidity">Humidity: <xliff:g id="humidity">%.2f</xliff:g>%%</string>
+    <string name="format_wind">Wind: <xliff:g id="wind">%.2f</xliff:g>Km/h</string>
+    <string name="format_pressure">Pressure: <xliff:g id="pressure">%.2f</xliff:g> hPa</string>
+
 </resources>
