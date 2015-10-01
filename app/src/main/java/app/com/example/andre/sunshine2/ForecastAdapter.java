@@ -103,6 +103,7 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        int viewType = getItemViewType(cursor.getPosition());
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         // Read weather icon ID from cursor
@@ -129,6 +130,10 @@ public class ForecastAdapter extends CursorAdapter {
         // Read low temperature from cursor
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
         viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
+
+        int weather_condition_id = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+        int id_img_src = viewType == VIEW_TYPE_TODAY ? Utility.getArtResourceForWeatherCondition(weather_condition_id) : Utility.getIconResourceForWeatherCondition(weather_condition_id);
+        viewHolder.iconView.setImageResource(id_img_src);
 
     }
 }

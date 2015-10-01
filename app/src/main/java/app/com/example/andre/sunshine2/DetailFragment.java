@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import app.com.example.andre.sunshine2.data.WeatherContract;
@@ -39,6 +40,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView humidity_text;
     private TextView wind_text;
     private TextView pressure_text;
+    private ImageView icon_image;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -99,6 +101,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         humidity_text = (TextView) rootView.findViewById(R.id.humidity_text_id);
         wind_text = (TextView) rootView.findViewById(R.id.wind_text_id);
         pressure_text = (TextView) rootView.findViewById(R.id.pressure_text_id);
+        icon_image = (ImageView) rootView.findViewById((R.id.icon_image_id));
+
 
         return rootView;
     }
@@ -158,9 +162,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         low_text.setText(Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp), isMetric));
         weather_text.setText(data.getString(idx_short_desc));
         humidity = data.getFloat(COL_WEATHER_HUMIDITY);
-        humidity_text.setText(getActivity().getString(R.string.format_humidity,humidity) );
+        humidity_text.setText(getActivity().getString(R.string.format_humidity, humidity) );
         wind_text.setText(getActivity().getString(R.string.format_wind, data.getDouble(COL_WEATHER_WIND_SPEED)));
         pressure_text.setText(getActivity().getString(R.string.format_pressure, data.getDouble(COL_WEATHER_PRESSURE)));
+        icon_image.setImageResource(Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID)));
 
 
         mForecastStr = app.com.example.andre.sunshine2.Utility.formatDate(data.getLong(idx_date)) +
