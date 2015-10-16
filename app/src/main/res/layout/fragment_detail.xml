@@ -10,7 +10,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Today"
             android:id="@+id/weekday_text_id"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -20,7 +19,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="june 14"
             android:id="@+id/date_text_id"
             android:padding="10dp" />
 
@@ -39,7 +37,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="21º"
                     android:id="@+id/high_text_id"
                     android:padding="10dp"
                     android:layout_gravity="center_horizontal" />
@@ -48,7 +45,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="8º"
                     android:id="@+id/low_text_id"
                     android:padding="10dp"
                     android:layout_gravity="center_horizontal" />
@@ -64,13 +60,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/icon_image_id"
-                    android:src="@mipmap/ic_launcher"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Clear"
                     android:id="@+id/weather_text_id"
                     android:padding="10dp"
                     android:layout_gravity="center_horizontal" />
@@ -80,21 +74,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Humidity: 84%"
             android:id="@+id/humidity_text_id"
             android:padding="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wind: 8 Km/h NW"
             android:id="@+id/wind_text_id"
             android:padding="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pressure: 1014 hPa"
             android:id="@+id/pressure_text_id"
             android:padding="10dp" />
 

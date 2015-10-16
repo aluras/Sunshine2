@@ -2,6 +2,7 @@ package app.com.example.andre.sunshine2;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -28,10 +29,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
 
+    static final String DETAIL_URI = "URI";
+
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
     private String mForecastStr;
     private ShareActionProvider mShareActionProvider;
-    private static final int FORECAST_LOADER = 0;
+    private static final int DETAIL_LOADER = 0;
     private TextView weekday_text;
     private TextView date_text;
     private TextView high_text;
@@ -41,12 +44,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView wind_text;
     private TextView pressure_text;
     private ImageView icon_image;
+    private Uri mUri;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(FORECAST_LOADER,null,this);
+        getLoaderManager().initLoader(DETAIL_LOADER,null,this);
         super.onActivityCreated(savedInstanceState);
     }
+
+    void onLocationChanged(String newLocation){
+        Uri uri = mUri;
+        if (null != uri){
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
 
     private static final String[] FORECAST_COLUMNS = {
             // In this case the id needs to be fully qualified with a table name, since
@@ -91,6 +106,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         weekday_text = (TextView) rootView.findViewById(R.id.weekday_text_id);
@@ -134,12 +154,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-        if (intent == null) {
-            return null;
-        }
+        if (null != mUri){
+            return new CursorLoader(getActivity(),mUri,FORECAST_COLUMNS,null,null,null);
 
-        return new CursorLoader(getActivity(),intent.getData(),FORECAST_COLUMNS,null,null,null);
+        }
+        return null;
     }
 
     @Override
