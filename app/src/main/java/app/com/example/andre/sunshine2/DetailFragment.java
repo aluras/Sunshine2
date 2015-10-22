@@ -44,6 +44,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView wind_text;
     private TextView pressure_text;
     private ImageView icon_image;
+    private DirectionView wind_direction;
     private Uri mUri;
 
     @Override
@@ -81,7 +82,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             WeatherContract.LocationEntry.COLUMN_COORD_LONG,
             WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
             WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
-            WeatherContract.WeatherEntry.COLUMN_PRESSURE
+            WeatherContract.WeatherEntry.COLUMN_PRESSURE,
+            WeatherContract.WeatherEntry.COLUMN_DEGREES
     };
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
@@ -98,6 +100,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_WEATHER_HUMIDITY = 9;
     static final int COL_WEATHER_WIND_SPEED = 10;
     static final int COL_WEATHER_PRESSURE = 11;
+    static final int COL_WEATHER_WIND_DIRECTION = 12;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -122,6 +125,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         wind_text = (TextView) rootView.findViewById(R.id.wind_text_id);
         pressure_text = (TextView) rootView.findViewById(R.id.pressure_text_id);
         icon_image = (ImageView) rootView.findViewById((R.id.icon_image_id));
+        wind_direction = (DirectionView) rootView.findViewById(R.id.wind_direction_id);
 
 
         return rootView;
@@ -183,6 +187,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         humidity = data.getFloat(COL_WEATHER_HUMIDITY);
         humidity_text.setText(getActivity().getString(R.string.format_humidity, humidity) );
         wind_text.setText(getActivity().getString(R.string.format_wind, data.getDouble(COL_WEATHER_WIND_SPEED)));
+        wind_direction.setDegree(data.getInt(COL_WEATHER_WIND_DIRECTION));
         pressure_text.setText(getActivity().getString(R.string.format_pressure, data.getDouble(COL_WEATHER_PRESSURE)));
         icon_image.setImageResource(Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID)));
 
