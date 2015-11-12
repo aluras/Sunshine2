@@ -48,7 +48,7 @@ public class ForecastAdapter extends CursorAdapter {
      */
     private String formatHighLows(double high, double low) {
         boolean isMetric = app.com.example.andre.sunshine2.Utility.isMetric(mContext);
-        String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(mContext, high, isMetric) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(mContext, low, isMetric);
+        String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(mContext, high) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(mContext, low);
         return highLowStr;
     }
 
@@ -130,11 +130,11 @@ public class ForecastAdapter extends CursorAdapter {
 
         // Read high temperature from cursor
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
+        viewHolder.highTempView.setText(Utility.formatTemperature(context, high));
 
         // Read low temperature from cursor
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
+        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low));
 
         int weather_condition_id = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
         int id_img_src = viewType == VIEW_TYPE_TODAY ? Utility.getArtResourceForWeatherCondition(weather_condition_id) : Utility.getIconResourceForWeatherCondition(weather_condition_id);

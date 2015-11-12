@@ -177,12 +177,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         float humidity;
 
         boolean isMetric = app.com.example.andre.sunshine2.Utility.isMetric(getActivity());
-        String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_max_temp), isMetric) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp), isMetric);
+        String highLowStr = app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_max_temp)) + "/" + app.com.example.andre.sunshine2.Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp));
 
         weekday_text.setText(Utility.getDayName(getActivity(), data.getLong(idx_date)));
         date_text.setText(Utility.getFormattedMonthDay(getActivity(), data.getLong(idx_date)));
-        high_text.setText(Utility.formatTemperature(getActivity(), data.getDouble(idx_max_temp), isMetric));
-        low_text.setText(Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp), isMetric));
+        high_text.setText(Utility.formatTemperature(getActivity(), data.getDouble(idx_max_temp)));
+        low_text.setText(Utility.formatTemperature(getActivity(), data.getDouble(idx_min_temp)));
         weather_text.setText(data.getString(idx_short_desc));
         humidity = data.getFloat(COL_WEATHER_HUMIDITY);
         humidity_text.setText(getActivity().getString(R.string.format_humidity, humidity) );
