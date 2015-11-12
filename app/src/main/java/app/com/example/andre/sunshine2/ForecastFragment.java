@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import app.com.example.andre.sunshine2.data.WeatherContract;
+import app.com.example.andre.sunshine2.sync.SunshineSyncAdapter;
 
 
 /**
@@ -143,9 +144,13 @@ public class ForecastFragment extends Fragment
 
 
     private void updateWeather(){
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+//        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+//        PendingIntent pi = PendingIntent.getBroadcast(getActivity(),0,alarmIntent,PendingIntent.FLAG_ONE_SHOT);
+//        AlarmManager am = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+//        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+        SunshineSyncAdapter.syncImmediately(getActivity());
+
     }
 
     @Override

@@ -42,4 +42,6 @@
     <string name="format_wind">Wind: <xliff:g id="wind">%.2f</xliff:g> Km/h</string>
     <string name="format_pressure">Pressure: <xliff:g id="pressure">%.2f</xliff:g> hPa</string>
 
+    <string name="sync_account_type">sunshine.example.com</string>
+    <string name="content_authority">app.com.example.andre.sunshine2</string>
 </resources>
